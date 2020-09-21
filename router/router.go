@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/firmanjs/fiber-with-mongo/handler"
+	"github.com/firmanJS/fiber-with-mongo/handler"
 	// "github.com/firmanjs/go-restfull-with-fiber/middleware"
 	"github.com/gofiber/fiber/v2"
 )
