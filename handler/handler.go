@@ -5,7 +5,7 @@ import (
 )
 
 // GetAllProducts from db
-func GetAllProducts(c *fiber.Ctx) error {
+func Index(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"status": "success", 

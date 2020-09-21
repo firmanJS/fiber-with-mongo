@@ -2,7 +2,6 @@ package router
 
 import (
 	"github.com/firmanJS/fiber-with-mongo/handler"
-	// "github.com/firmanjs/go-restfull-with-fiber/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,6 +13,6 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 
 	// routes
-	api.Get("/", handler.index)
+	api.Get("/", handler.Index)
 
 }
