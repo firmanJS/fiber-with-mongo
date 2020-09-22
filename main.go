@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/firmanJS/fiber-with-mongo/helpers"
-	"github.com/firmanJS/fiber-with-mongo/database"
 	"github.com/firmanJS/fiber-with-mongo/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -17,8 +16,6 @@ func main() { // entry point to our program
 	app.Use(cors.New())
 	app.Use(logger.New())
 	router.SetupRoutes(app)
-
-	database.ConnectDb()
 
 	app.Use(helpers.NotFound)
 

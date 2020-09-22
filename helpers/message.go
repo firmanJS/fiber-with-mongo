@@ -20,3 +20,14 @@ func NotFound(c *fiber.Ctx) error {
 	}
 	return c.JSON(resNotFound)
 }
+
+func ErrorResponse(msg string, c *fiber.Ctx) error {
+	resErr := &resMessage{
+		Code:    403,
+		Status:  "Error",
+		Message: msg,
+		Data:    "null",
+	}
+	return c.JSON(resErr)
+}
+

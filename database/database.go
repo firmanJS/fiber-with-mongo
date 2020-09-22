@@ -2,37 +2,26 @@ package database
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"time"
 
 	"github.com/firmanJS/fiber-with-mongo/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func ConnectDb() {
-	MONGO_HOST := config.Config(MONGO_HOST)
-
-	opt := options.Credential{
-		Username:   config.Config(MONGO_USERNAME),
-		Password:   config.Config(MONGO_PASSWORD),
-		AuthSource: config.Config(MONGO_SOURCE),
-	}
-
-	client, err := mongo.NewClient(options.Client().ApplyURI(fmt.Sprintf("mongodb://%v:27017", MONGO_HOST)).SetAuth(opt))
-
+func Connect() (*mongo.Database, error) {
+	clientOptions := options.Client()
+	clientOptions.ApplyURI(config.Config("MONGO_HOST"))
+	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+
+	var ctx = context.Background()
 
 	err = client.Connect(ctx)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	db := client.Database(config.Config(MONGO_DB_NAME))
-
-	defer cancel()
+	return client.Database(config.Config("MONGO_DB_NAME")), nil
 }
