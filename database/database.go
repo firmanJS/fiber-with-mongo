@@ -1,11 +1,11 @@
-package config
+package database
 
 import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
+
 	"github.com/firmanJS/fiber-with-mongo/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
