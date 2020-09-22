@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/firmanJS/fiber-with-mongo/router"
 	"github.com/firmanJS/fiber-with-mongo/helpers"
+	"github.com/firmanJS/fiber-with-mongo/config"
+	"github.com/firmanJS/fiber-with-mongo/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -17,9 +18,9 @@ func main() { // entry point to our program
 	app.Use(logger.New())
 	router.SetupRoutes(app)
 
-	app.Use(func(c *fiber.Ctx) error {
-		return helpers.NotFound()
-	})
+	config.ConnectDb()
 
-	log.Fatal(app.Listen(":2000"))
+	app.Use(helpers.NotFound)
+
+	log.Fatal(app.Listen(":1000"))
 }

@@ -5,16 +5,18 @@ import (
 )
 
 type resMessage struct {
-	code int
-	status  string
-	message string
+	Code    int         `json:"code,omitempty"`
+	Status  string      `json:"status,omitempty"`
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 func NotFound(c *fiber.Ctx) error {
 	resNotFound := &resMessage{
-		code:  404,
-		status: "not found",
-		message: "url not found",
+		Code:    404,
+		Status:  "not found",
+		Message: "url not found",
+		Data:    "null",
 	}
-	return c.Status(404).JSON(resNotFound)
+	return c.JSON(resNotFound)
 }

@@ -8,8 +8,6 @@ import (
 // SetupRoutes func
 func SetupRoutes(app *fiber.App) {
 
-	// Middleware
-	// api := app.Group("/api", middleware.AuthReq())
 	api := app.Group("/api")
 
 	// routes
