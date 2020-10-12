@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/firmanJS/fiber-with-mongo/config"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,6 +23,8 @@ func Connect() (*mongo.Database, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("Connected to MongoDB!")
 
 	return client.Database(config.Config("MONGO_DB_NAME")), nil
 }

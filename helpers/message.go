@@ -6,28 +6,17 @@ import (
 
 type resMessage struct {
 	Code    int         `json:"code,omitempty"`
-	Status  string      `json:"status,omitempty"`
+	Status  bool      `json:"status,omitempty"`
 	Message string      `json:"message,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
 }
 
-func NotFound(c *fiber.Ctx) error {
-	resNotFound := &resMessage{
-		Code:    404,
-		Status:  "not found",
-		Message: "url not found",
-		Data:    "null",
-	}
-	return c.JSON(resNotFound)
-}
-
-func ErrorResponse(msg string, c *fiber.Ctx) error {
-	resErr := &resMessage{
-		Code:    403,
-		Status:  "Error",
+func ResponseMsg(c *fiber.Ctx, code int, status bool, msg string, data interface{}) error {
+	resPonse := &resMessage{
+		Code:    code,
+		Status:  status,
 		Message: msg,
-		Data:    "null",
+		Data:    data,
 	}
-	return c.JSON(resErr)
+	return c.JSON(resPonse)
 }
-

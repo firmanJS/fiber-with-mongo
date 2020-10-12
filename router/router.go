@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/firmanJS/fiber-with-mongo/handler"
+	"github.com/firmanJS/fiber-with-mongo/handler/users"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
@@ -16,5 +16,9 @@ func SetupRoutes(app *fiber.App) {
 
 	users := api.Group("/users")
 	users.Get("/", handler.GetUsers)
+	users.Post("/", handler.CreateUsers)
+	users.Delete("/:id", handler.DeleteUsers)
+	users.Get("/:id", handler.GetByIdUsers)
+	users.Put("/:id", handler.UpdateUsers)
 
 }
