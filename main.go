@@ -16,7 +16,7 @@ func main() { // entry point to our program
 	router.SetupRoutes(app)
 
 	app.Use(func(c *fiber.Ctx) error {
-		return helpers.ResponseMsg(c, 404, false, "NotFound", nil)
+		return helpers.ResponseMsg(c, 404, "NotFound", nil)
 	})
 
 	log.Fatal(app.Listen(":1000"))

@@ -1,0 +1,1 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/54e6bcff30661973c630/maintainability)](https://codeclimate.com/github/firmanJS/fiber-with-mongo/maintainability)

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -15,24 +14,27 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+var ctx = context.Background()
+var users = new(models.Users)
+
 func Index(c *fiber.Ctx) error {
-	return helpers.ResponseMsg(c, 200, true, "Api is running", nil)
+	return helpers.ResponseMsg(c, 200, "Api is running", nil)
 }
 
 func UpdateUsers(c *fiber.Ctx) error {
 	_id := c.Params("id")
 	users := new(models.Users)
-	var ctx = context.Background()
 	db, err := database.Connect()
 
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
 	if err := c.BodyParser(users); err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": fmt.Sprintf("Invalid post body. %s", err.Error())})
+		return helpers.ResponseMsg(c, 400, "error", err.Error())
 	} else {
 		if docID, err := primitive.ObjectIDFromHex(_id); err != nil {
-			return c.Status(400).JSON(fiber.Map{"success": false})
+			return helpers.ResponseMsg(c, 400, "error", err)
 		} else {
 			q := bson.M{"_id": docID}
 
@@ -47,7 +49,7 @@ func UpdateUsers(c *fiber.Ctx) error {
 			o := options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(options.After)
 
 			db.Collection("users").FindOneAndUpdate(ctx, q, u, o).Decode(&users)
-			return c.Status(200).JSON(fiber.Map{"success": true, "users": users})
+			return helpers.ResponseMsg(c, 400, "Update Data Succesfully", users)
 		}
 	}
 }
@@ -62,25 +64,23 @@ func GetByIdUsers(c *fiber.Ctx) error {
 	}
 	
 	if docID, err := primitive.ObjectIDFromHex(_id); err != nil {
-		return c.Status(400).JSON(fiber.Map{"success": false})
+		return helpers.ResponseMsg(c, 400, "Get Data unsuccesfully", err.Error())
 	} else {
 		q := bson.M{"_id": docID}
 		users := models.Users{}
 		result := db.Collection("users").FindOne(ctx, q)
 		result.Decode(&users)
-
 		if result.Err() != nil {
-			fmt.Println(result.Err().Error())
-			return c.Status(200).JSON(fiber.Map{"success": true, "users": fmt.Sprintf("No users found for give id: %s", _id)})
+			return helpers.ResponseMsg(c, 200, "Get Data unsuccesfully",result.Err().Error())
 		} else {
-			return c.Status(200).JSON(fiber.Map{"success": true, "users": users})
+			return helpers.ResponseMsg(c, 200, "Get Data Succesfully", users)
 		}
 	}
 
 }
 
 func GetUsers(c *fiber.Ctx) error {
-	var ctx = context.Background()
+	
 	db, err := database.Connect()
 
 	if err != nil {
@@ -91,6 +91,7 @@ func GetUsers(c *fiber.Ctx) error {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
 	defer csr.Close(ctx)
 
 	result := make([]models.Users, 0)
@@ -104,8 +105,7 @@ func GetUsers(c *fiber.Ctx) error {
 		result = append(result, row)
 	}
 
-	return helpers.ResponseMsg(c, 200, true, "Get Data Succesfully", result)
-
+	return helpers.ResponseMsg(c, 200, "Get Data Succesfully", result)
 }
 
 func CreateUsers(c *fiber.Ctx) error {
@@ -121,13 +121,12 @@ func CreateUsers(c *fiber.Ctx) error {
 	users.UpdatedAt = time.Now()
 
 	if err := c.BodyParser(users); err != nil {
-		return helpers.ResponseMsg(c, 400, false, err.Error(), nil)
+		return helpers.ResponseMsg(c, 400, err.Error(), nil)
 	} else {
 		if r, err := db.Collection("users").InsertOne(ctx, users); err != nil {
-			return helpers.ResponseMsg(c, 500, false, err.Error(), nil)
+			return helpers.ResponseMsg(c, 500, "Inserted data unsuccesfully", err.Error())
 		} else {
-			fmt.Println(r)
-			return helpers.ResponseMsg(c, 500, false, "Inserted", r)
+			return helpers.ResponseMsg(c, 200, "Inserted data succesfully", r)
 		}
 	}
 }
@@ -142,14 +141,14 @@ func DeleteUsers(c *fiber.Ctx) error {
 	}
 
 	if docID, err := primitive.ObjectIDFromHex(_id); err != nil {
-		return helpers.ResponseMsg(c, 400, true, "Sucess", nil)
+		return helpers.ResponseMsg(c, 400, "Sucess", nil)
 	} else {
 		q := bson.M{"_id": docID}
 		r := db.Collection("users").FindOneAndDelete(ctx, q)
 		if r.Err() != nil {
-			return helpers.ResponseMsg(c, 400, false, "error", r)
+			return helpers.ResponseMsg(c, 400, "error", r)
 		} else {
-			return helpers.ResponseMsg(c, 200, false, "Sucess", r)
+			return helpers.ResponseMsg(c, 200, "Sucess", r)
 		}
 	}
 }
