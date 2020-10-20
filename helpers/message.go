@@ -16,5 +16,5 @@ func ResponseMsg(c *fiber.Ctx, code int, msg string, data interface{}) error {
 		Message: msg,
 		Data:    data,
 	}
-	return c.JSON(resPonse)
+	return c.Status(code).JSON(resPonse)
 }
